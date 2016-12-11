@@ -1,7 +1,7 @@
 /**
  * TESTING: http://www.spoj.com/problems/RENT/
  * Correct Tested
- * Complexity: O(n*n)
+ * Complexity: O(n*lg(n))
  * Pseudocode: 
  * sort the jobs according to finish times in increasing order
  * for every job in dp -> choose job or don't choose job
@@ -16,8 +16,10 @@
  *        (ii) Maximum profit by including the current job            
  *  }
  * Proof: Simple DP no proof needed
- * Explanation: https://www.youtube.com/watch?v=cr6Ip0J9izc
- * 				http://www.geeksforgeeks.org/weighted-job-scheduling-log-n-time/
+ * Explanation: http://www.geeksforgeeks.org/weighted-job-scheduling-log-n-time/
+ * ONLY DIFFERENCE b/w this and n*n:
+ * use binary search to find the latest index for which start_time of j<= finish time of i 
+ * and compare that with dp[i-1] and take maximum because at each step we are taking maximum till now in dp 
 */
 
 /**
@@ -55,7 +57,7 @@ void __initDp__(int n)
 
 void takeInput(int n)
 {
-		for(int i=0;i<n;i++)
+	for(int i=0;i<n;i++)
 	{
 		int temp_start_time, duration,profit;
 		cin>>temp_start_time;
@@ -66,30 +68,52 @@ void takeInput(int n)
 	}
 }
 
+int myBinarySearch(int left_index, int right_index, int key)
+{
+	while(left_index<=right_index)
+	{
+		int mid= (left_index+ right_index)/2;
+		int got_finish_time = get<1>(time_profit_arr[mid]);
+		if( got_finish_time<=key )
+		{
+
+			if( mid+1<=right_index && get<1>(time_profit_arr[mid+1]) <= key )
+			{
+				left_index = mid + 1;
+			}
+			else
+			{
+				return mid;
+			}
+		}
+		else if(got_finish_time>key)
+		{
+			right_index = mid-1;
+		}
+
+	}
+	return -1;
+}
 
 long long int solve(int n)
 {
 	__initDp__(n);
-	for(int i=0;i<n;i++)
+	for(int i=1;i<n;i++)
 	{
-		for(int j=0;j<i;j++)
-		{
-			if(get<1>(time_profit_arr[j]) <= get<0>(time_profit_arr[i]))  // if the finish time of j request <= start time of ith request  
-			{
-				max_profit_dp[i] = max(max_profit_dp[j]+ get<2>(time_profit_arr[i]), max_profit_dp[i]);
-			}	
+		int latestFinishedJob = myBinarySearch(0,i-1,get<0>(time_profit_arr[i]));
+		if(latestFinishedJob!=-1){
+			max_profit_dp[i] = max(max_profit_dp[latestFinishedJob]+ get<2>(time_profit_arr[i]), max_profit_dp[i]);
 		}
+		max_profit_dp[i] = max(max_profit_dp[i],max_profit_dp[i-1]);
+
+
 	}
 	long long int ans =0;
-	for(int i=0;i<n;i++)
-	{
-		ans = max(max_profit_dp[i],ans);
-	}
+	
+		ans = max_profit_dp[n-1];
+	
 	return ans;
-
 }
-
-
 int main()
 {
 
@@ -100,12 +124,10 @@ int main()
 		int n;cin>>n;
 		takeInput(n);
 		sort(time_profit_arr,time_profit_arr+n,myComparator);
-
 		cout<<solve(n)<<endl;
-
 
 	}
 
-return 0;
+	return 0;
 
 }
