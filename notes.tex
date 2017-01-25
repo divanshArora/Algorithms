@@ -1,0 +1,67 @@
+\documentclass[20pt]{article}
+\begin{document}
+
+ADA notes MIT OCW
+
+Intractibility
+NP problems: Class of problems verifiable in polynomial time. Example: Hamiltonian path (Given a cycle we can check that it contains all vertices in polynomial time)
+
+NP complete: 
+Example: Finding a hamiltonian cycle. Hardest of NP. If solved all NPcan be easily solved.
+Definition: Problem is in NP and is as difficult as any probleem in NP 
+
+Some examples of NP complete:
+Interval Scheduling
+Single resource multiple requests
+Select a compatible subset of requests that is of maximum size
+
+ALGORITHM: Job Scheduling so that maximum jobs are taken: 
+Pseudocode:
+Take the job with minimum finish time:
+
+ALGORITHM: 
+Weighted interval scheduling
+Jobs are given a weight;
+Use DP
+Recurrence :  OPT = (for i = 1 to i=n)MAX(Weight(i) + OPT(Fx))
+Note: Sort first by end times
+Fx is the set of all weights with finish times greater than current weight
+For all different weights try each weight as a possible first weight and take maximum
+Time complexity = O(n*n) {simple} O(n*lgn) {using binary search // binary heap}
+
+Divide and Conquer:
+
+T(n) = aT(n/b) + {work done in merge}
+
+
+ALGORITHM: Convex Hull
+Brute force in O(n3)
+
+Divide and Conquer approach:
+Two finger algorithm for merge
+TO DO -----------------------
+Graham Scan:
+TO DO---------------------
+ALGORITHM:
+Define rank of an element: Rank(x) = number of elements in set that are <= x
+Median find: Find the element with rank $ \left \lceil{x}\right \rceil $
+
+Divide and conquer algorithm.
+Select an element x and then divide the set into two sets B and C such that all B has all elements which are less than x and C has all element
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+\end{document}
